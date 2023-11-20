@@ -136,11 +136,59 @@ app.get("/dashboard", function (req, res) {
             }).exec();
 
             const totalAmount = result.length > 0 ? result[0].totalAmount : 0;
-            res.write("Welcome to CRM ");
             const totalString = totalAmount.toString();
-            const totalCLient = clientCount.toString();
-            res.write(totalString + ' ');
-            res.write(totalCLient);
+            const totalClient = clientCount.toString();
+
+
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+            const clientweek = await Client.aggregate([
+                {
+                    $match: {
+                        Joining: { $gte: oneWeekAgo }
+                    }
+                },
+                {
+                    $group: {
+                        _id: { $dateToString: { format: '%Y-%m-%d', date: '$Joining' } },
+                        count: { $sum: 1 }
+                    }
+                },
+                {
+                    $sort: { _id: 1 }
+                }
+            ]).exec();
+
+            const Amountweek = await Transaction.aggregate([
+                {
+                  $match: {
+                    Date: { $gte: oneWeekAgo }
+                  }
+                },
+                {
+                  $group: {
+                    _id: { $dateToString: { format: '%Y-%m-%d', date: '$Date' } },
+                    totalAmount: { $sum: '$amount' }
+                  }
+                },
+                {
+                  $sort: { _id: 1 } 
+                }
+              ])
+                .exec();
+
+            const responseObject = {
+                title: 'Welcome to CRM',
+                totalAmount: totalString,
+                clientCount: totalClient,
+                weeklyClient: clientweek,
+                weeklyAmoutn: Amountweek
+            };
+
+
+            res.json(responseObject);
+
             res.end();
         };
 
