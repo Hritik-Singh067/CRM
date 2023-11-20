@@ -56,12 +56,12 @@ passport.deserializeUser(User.deserializeUser());
 const clientSchema = new Schema({
     email: String,
     name: String,
-    Contact: Number,
+    contact: Number,
     Joining: {
         type: Date,
         default: () => new Date().toISOString().split('T')[0]
     },
-    Address: String
+    address: String
 });
 
 const Client = mongoose.model('Client', clientSchema);
@@ -97,7 +97,7 @@ const Transaction = mongoose.model('Transaction', transactionSchema);
 
 //////////////////////////////////////Dashboard and logout/////////////////////////////////////////
 
-app.get("/",function(req,res){
+app.get("/", function (req, res) {
     res.send("Backend Deployment Successfull!");
 })
 
@@ -195,6 +195,10 @@ app.post("/register", function (req, res) {
 //////////////////////////////////////Admin Login/////////////////////////////////////////
 
 
+app.get("/login", function (req, res) {
+    res.sendFile(__dirname + "/index.html");
+})
+
 app.post("/login", function (req, res) {
 
     const user = new User({
@@ -238,8 +242,8 @@ app.route("/client")
             const newClient = new Client({
                 email: req.body.email,
                 name: req.body.name,
-                Contact: req.body.contact,
-                Address: req.body.Address
+                contact: req.body.contact,
+                address: req.body.address
             });
 
             newClient.save();
@@ -275,7 +279,7 @@ app.route("/client")
 
         if (req.isAuthenticated()) {
             async function delallClients() {
-                var results = await Client.deleteOne({ uid: req.params.uid });
+                var results = await Client.deleteOne({ _id: req.params.uid });
                 res.send("deleted succesfully");
             }
             delallClients();
@@ -349,7 +353,7 @@ app.route("/transaction")
         if (req.isAuthenticated()) {
 
             async function delAllTranc() {
-                var results = await Transaction.deleteOne({ Order_id: req.params.orderid });
+                var results = await Transaction.deleteOne({ _id: req.params.orderid });
                 res.send("deleted succesfully");
             }
             delAllTranc();
