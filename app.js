@@ -186,7 +186,6 @@ app.get("/dashboard", function (req, res) {
                 weeklyAmoutn: Amountweek
             };
 
-
             res.json(responseObject);
 
             res.end();
@@ -327,7 +326,7 @@ app.route("/client")
 
         if (req.isAuthenticated()) {
             async function delallClients() {
-                var results = await Client.deleteOne({ _id: req.params.uid });
+                var results = await Client.deleteOne({ _id: req.body.uid });
                 res.send("deleted succesfully");
             }
             delallClients();
@@ -401,7 +400,7 @@ app.route("/transaction")
         if (req.isAuthenticated()) {
 
             async function delAllTranc() {
-                var results = await Transaction.deleteOne({ _id: req.params.orderid });
+                var results = await Transaction.deleteOne({ _id: req.body.orderid });
                 res.send("deleted succesfully");
             }
             delAllTranc();
