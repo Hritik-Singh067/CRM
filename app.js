@@ -97,6 +97,10 @@ const Transaction = mongoose.model('Transaction', transactionSchema);
 
 //////////////////////////////////////Dashboard and logout/////////////////////////////////////////
 
+app.get("/",function(req,res){
+    res.send("Backend Deployment Successfull!");
+})
+
 app.get("/dashboard", function (req, res) {
     if (req.isAuthenticated()) {
         async function amount() {
