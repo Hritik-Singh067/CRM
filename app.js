@@ -6,12 +6,10 @@ const session = require("express-session");
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const Schema = mongoose.Schema;
-const cors = require('cors');
 
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors);
 
 app.use(session({
     secret: process.env.Secret,
